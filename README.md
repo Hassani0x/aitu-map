@@ -1,6 +1,6 @@
 # AITU Map
 
-A mobile-first campus guide for **Astana IT University**, with searchable rooms, walking routes, phone geolocation, and 2D/3D floor views.
+A mobile-first campus guide for **Astana IT University**, with searchable rooms, walking routes, phone geolocation, and Normal and 2D floor views.
 
 **[Open the app](https://aitu-campus-map.vercel.app)** · [Telegram @hhassani1](https://t.me/hhassani1) · [GitHub Hassani0x](https://github.com/Hassani0x)
 
@@ -9,7 +9,7 @@ A mobile-first campus guide for **Astana IT University**, with searchable rooms,
 ## Features
 
 - 262 searchable destinations across three floors
-- Normal, 2D, and interactive 3D views
+- Normal and 2D views
 - Phone and tablet layouts with touch controls
 - Room-to-room routing with stair connections
 - Real phone-location updates with accuracy and freshness checks
@@ -38,7 +38,7 @@ Reliable indoor positioning needs surveyed geographic alignment and suitable pos
 
 ## Map limitations
 
-Plans are archival; check current campus signs. Routes use stairs and are not accessibility or emergency guidance. Precise distances and walking times are not claimed. 3D extrudes room footprints to an illustrative height, not a measured architectural model. WebGL is required for 3D; 2D remains available.
+Plans are archival; check current campus signs. Routes use stairs and are not accessibility or emergency guidance. Precise distances and walking times are not claimed.
 
 Disconnected source geometry prevents routing to C1.1.228P and C1.1.230P (floor 2), and C1.2.320 (floor 3). These connections display unavailable routes.
 
@@ -68,7 +68,6 @@ Use HTTPS for phone geolocation testing. A laptop LAN HTTP address generally is 
 | app/App.jsx | Mobile shell, search, routes and floor controls |
 | app/LocationPanel.jsx | Location watcher, accuracy and alignment UI |
 | app/location.js | Geographic alignment and fix validation |
-| app/Map3D.jsx | Lazy-loaded Three.js room geometry and touch controls |
 | app/routing.js | Walkable grid, wall checks, smoothing and progress |
 | app/rooms.json | Destination metadata |
 | public/maps/ | Original SVG floor plans |
