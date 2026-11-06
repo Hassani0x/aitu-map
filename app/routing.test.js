@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import rooms from './rooms.json' with {type:'json'};
+import {routeBetween,routePosition,smooth,inside,obstacles,length} from './routing.js';
+const start=rooms.find(r=>r.id==='1-C1.2.124K');
+test('all 262 original destinations have unique identities and valid floor geometry',()=>{assert.equal(rooms.length,262);assert.equal(new Set(rooms.map(r=>r.id)).size,262);for(const r of rooms){assert.ok([1,2,3].includes(r.floor));assert.ok(r.points.length>=3);assert.ok(Number.isFinite(r.x)&&Number.isFinite(r.y))}});
+test('every destination is routed or explicitly reported as an unmapped connection',()=>{const unavailable=[];for(const r of rooms){if(r.id===start.id)continue;const route=routeBetween(start,r);if(!route)unavailable.push(r.id);else {assert.ok(route.total>0);assert.equal(route.legs[0].floor,start.floor);assert.equal(route.legs.at(-1).floor,r.floor)}}assert.deepEqual(unavailable.sort(),['2-C1.1.228P','2-C1.1.230P','3-C1.2.320']);});
+test('same room and missing endpoints do not create spurious routes',()=>{assert.equal(routeBetween(start,start),null);assert.equal(routeBetween(null,start),null)});
+test('route movement starts and ends at the actual path endpoints',()=>{const r=routeBetween(start,rooms.find(r=>r.floor===3));assert.deepEqual(routePosition(r,0).point,r.legs[0].points[0]);assert.deepEqual(routePosition(r,1).point,r.legs.at(-1).points.at(-1));assert.equal(routePosition(r,1).floor,3)});
+test('smoothed routes to campus destinations do not cross room interiors',()=>{for(const dest of rooms.filter(r=>r.kind==='place')){const r=routeBetween(start,dest);assert.ok(r);for(const l of r.legs){const ps=smooth(l.points,l.floor);assert.ok(length(ps)<=length(l.points)+.001);for(let i=1;i<ps.length;i++){const a=ps[i-1],b=ps[i],n=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])*2);for(let k=1;k<n;k++){const p=[a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n];assert.ok(!obstacles[l.floor].some(poly=>inside(p,poly)),`${dest.name} crosses a polygon at ${p}`)}}}}});
